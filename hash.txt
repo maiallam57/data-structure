@@ -1,0 +1,76 @@
+#include <iostream>
+using namespace std;
+
+const int sizee=10;
+
+struct node {
+    int data;
+    struct node* next;
+};
+struct node* chain[sizee];
+
+void insert(int value) {
+    // create a newnode with value 
+    node* new_node = new node();
+    new_node->data = value;
+    new_node->next = NULL;
+
+    //calculate Hash Key
+    int key = value % sizee;
+    //check if chain[key] is empty
+    if (chain[key] == NULL)
+        chain[key] = new_node;
+    //collision 
+    else {
+        //add the node at the end of chain[key]
+        struct node* temp = chain[key];
+        while (temp->next) {
+            temp = temp->next;
+        }
+        temp->next = new_node;
+    }
+}
+
+int search(int value) {
+    int key = value % sizee;
+    struct node* temp = chain[key];
+    while (temp) {
+        if (temp->data == value)
+            return 1;
+        temp = temp->next;
+    }
+    return 0;
+}
+void print_search(int value) {
+    int k = search(value);
+    if (k == 1) {
+        cout << "Element: " << value << " Is Found " << endl;
+        return;
+    }
+    else {
+        cout << "Element " << value << "is Not Found " << endl;
+    }
+}
+int main() {
+    insert(89);
+    insert(18);
+    insert(49);
+    insert(58);
+    insert(9);
+
+    for (int i = 0; i < sizee; i++) {
+        struct node* temp = chain[i];
+        cout << "Chain [" << i << "]-->";
+
+        while (temp) {
+            cout << temp->data <<"-->";
+            temp = temp->next;
+        }
+        cout << "Null \n" << endl;
+    }
+
+    print_search(9);
+    print_search(19);
+
+    return 0;
+}
